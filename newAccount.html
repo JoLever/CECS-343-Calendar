@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <title> New Account </title>
+    <link rel="stylesheet" href="loginpg.css">
+</head>
+<body>
+    <h1>CSULB Student Calendar</h1>
+<form action="newAccount.php" method = "post">
+  <div class="container">
+    <label><b>Name</b></label>
+    <input type="text" placeholder="First" name="fName" required>
+    <input type="text" placeholder="Last" name="lName" required>
+        
+    <label><b>New Student ID</b></label>
+      <input type="text" placeholder="Enter Student ID" name="stdid" required>
+ 
+    <label><b>New Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+    
+    <button type="submit">Create New Account</button>
+
+    </div>
+ 
+  <div class="container" style="background-color:#f1f1f1">
+    <button id="mybutton" class="cancelbtn">Cancel</button>
+    <script type = "text/javascript">
+        document.getElementById("mybutton").onclick = function(){
+            location.href = "calendar.html";
+        }
+    </script>
+    </div>
+</form>
+</body>
+</html>

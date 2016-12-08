@@ -1,4 +1,4 @@
-function todayDate(){
+function todayDate() {
     var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 }
 function nextItemId() {
@@ -256,7 +256,6 @@ function smoothScrollToToday()
 	if(goalY != startY) setTimeout('scrollAnimation()', 10);
 }
 
-// TODO: when scrolling down, safari sometimes scrolls down by the exact height of content added
 function poll()
 {
 	// add more weeks so you can always keep scrolling
@@ -321,9 +320,18 @@ window.onload = function()
 	loadCalendarAroundDate(todayDate);
 	setInterval('poll()', 100);
 }
+function logOut(){ 
+    document.getElementById("mybutton").onclick = function(){
+    location.href = "calendar.html";
+    }
+}
+function showHelp() { 
+    document.getElementById('help').style.display = 'block';
+}
+function hideHelp() { 
+    document.getElementById('help').style.display = 'none';
+}
 
-function showHelp() { document.getElementById('help').style.display = 'block'; }
-function hideHelp() { document.getElementById('help').style.display = 'none'; }
-document.write('<div id="header"><a class="button" href="javascript:smoothScrollToToday()">Scroll to today</a><a class="button" href="javascript:showHelp()">Help</a>&nbsp;</a></div>');
+document.write('<div id = "h1">CSULB Student Calendar<div id = "days"><b class="mybutton"href="javascript:logOut()">logout</b> \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Sunday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Monday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Tuesday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0 Wednesday \u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Thursday \u00A0 \u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Friday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Saturday<div id="header"><a class="button" href="javascript:smoothScrollToToday()">Current Date</a><a class="button" href="javascript:showHelp()">Help</a>&nbsp;</a></div></div></div>');
 document.write('<table id="calendar"></table>');
-document.write('<div id="help"><div><ul><li>Click on a day to add a note</li><li>To delete a note, delete its text</li><li>Use the scroll wheel to move forward or backward in time</li></ul><a class="button" href="javascript:hideHelp()">Close</a></div></div>');
+document.write('<div id="help"><div><ul><li>Click on a date to add an event</li><li>Click on a date to delete an event</li><li>Use the scroll wheel/trackpad to navigate</li></ul><a class="button" href="javascript:hideHelp()">Close</a></div></div>');

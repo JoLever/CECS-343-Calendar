@@ -42,13 +42,18 @@ button {
     width: 100%;
 }
  
-/* Extra style for the cancel button (red) */
+/* Extra style for the new account button */
+.newAccount{
+    width: auto;
+    padding: 10px 18px;
+    background-color: dimgray;
+}
+/* Extra style for the cancel button */
 .cancelbtn {
     width: auto;
     padding: 10px 18px;
     background-color: dimgray;
 }
- 
 /* Add padding to containers */
 .container {
     padding: 16px;

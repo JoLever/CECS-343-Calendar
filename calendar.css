@@ -1,6 +1,29 @@
-#header {
-	line-height: 27px;
+#h1{
     background: -webkit-gradient(linear, 0 60%, 0 100%, from(black), color-stop(05, #3f3f3f), to(#474747));
+	position: fixed;
+	left: 0;
+	right: 0;
+	height: 80px;
+	padding: 5px;
+	text-align: left;
+    color: white;
+    font: 30px 'Avenue', sans-serif;
+    line-height: 100px;
+}
+#days{
+    background: gray;
+    font: bold 15px 'Avenue', sans-serif;
+    background size: cover;
+	position: fixed;
+	left: 0;
+	right: 0;
+	height: 19px;
+	padding: 5px;
+    top: 90px;
+	text-align: left;
+    color: black;
+}
+#header {
     background size: cover;
 	position: fixed;
 	left: 0;
@@ -8,13 +31,16 @@
 	height: 80px;
 	padding: 5px;
 	text-align: right;
+    color: white;
 }
 
 #header {
-    font: bold 15px 'Avenue', sans-serif;
+    font: bold 12px 'Avenue', sans-serif;
 	top: 0;
 	border-bottom: 2px solid black;
+    	line-height: 100px;
 }
+
 #help {
     
 	display: none;
@@ -48,25 +74,47 @@
 	text-align: left;
 	line-height: 15px;
 }
-
-a.button {
-	display: inline-block;
-	color: black;
-	text-decoration: none;
-	padding: 5px 15px;
-	line-height: 15px;
-	margin: 0 0 0 5px;
-	border: 1px solid #999;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	background: #EFEFEF;
-	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#DFDFDF));
+b.mybutton{
+    padding: 2px 10px;
+    text-align: left;
+    cursor: pointer;
+    outline: black;
+    color: black;
+    background-color: #EFEFEF;
+    margin: 0 0 0 4px;
+    border: 1px solid black;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
+b.mybutton:hover {background-color: #bfbfbf}
+
+b.mybutton:active {
+  background-color: #f4ab18;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+a.button {
+  padding: 7px 11px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: black;
+  background-color: #EFEFEF;
+  margin: 0 0 0 5px;
+  border: 1px solid #999;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+ 
+
+}
+a.button:hover {background-color: #bfbfbf}
 
 a.button:active {
-	background: #D7D7D7;
-	background: -webkit-gradient(linear, left top, left bottom, from(#CFCFCF), to(#DFDFDF));
+  background-color: #f4ab18;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
 
 body, td {

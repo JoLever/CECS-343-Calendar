@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <title> CSULB Calendar </title>
+    <link rel="stylesheet" href="loginpg.css">
+</head>
+ 
+<body>
+    <h1>CSULB Student Calendar</h1>
+<form action="login.php" method = "post"> <!links the login page to the php file that connects to the database.-->
+  <div class="container">
+    <label><b>Student ID</b></label>
+      <input type="text" placeholder="Enter Student ID" name="stdid" required><!This creates a text box for the student ID.-->
+ 
+    <label><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required><!This creates a text box for the password.-->
+ 
+    <button type="submit">Login</button><!creates a button labeled login.-->
+  </div>
+ <!this creates a separate container for the new account button-->
+  <div class="container" style="background-color:#f1f1f1"> 
+    <button id="mybutton" class="cancelbtn">New Account</button>
+    <script type = "text/javascript"><!uses javascript to link the new account button to the new account page.-->
+      document.getElementById("mybutton").onclick = function(){
+          location.href = "newAccount.html";
+      }
+      </script>
+    </div>
+</form>
+ 
+</body>
+</html>
