@@ -1,6 +1,6 @@
 h1{
     color: white;
-   	font: 30px 'Avenue', sans-serif;
+    font: 30px 'Avenue', sans-serif;
     line-height: 100px;
     background: -webkit-gradient(linear, 0 60%, 0 100%, from(black), color-stop(05, #3f3f3f), to(#474747));
     background size: cover;

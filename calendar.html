@@ -8,22 +8,22 @@
  
 <body>
     <h1>CSULB Student Calendar</h1>
-<form action="login.php" method = "post"> <!links the login page to the php file that connects to the database.-->
+<form action="login.php" method = "post"><!This references the php code that reads the database for the login.-->
   <div class="container">
     <label><b>Student ID</b></label>
-      <input type="text" placeholder="Enter Student ID" name="stdid" required><!This creates a text box for the student ID.-->
+      <input type="text" placeholder="Enter Student ID" name="stdid" required><!This creates an input box for student ID.-->
  
     <label><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required><!This creates a text box for the password.-->
+    <input type="password" placeholder="Enter Password" name="psw" required><!This creates an input box for the password.-->
  
-    <button type="submit">Login</button><!creates a button labeled login.-->
+    <button type="submit">Login</button><!This creates the login button.-->
   </div>
  <!this creates a separate container for the new account button-->
   <div class="container" style="background-color:#f1f1f1"> 
     <button id="mybutton" class="cancelbtn">New Account</button>
-    <script type = "text/javascript"><!uses javascript to link the new account button to the new account page.-->
+    <script type = "text/javascript">
       document.getElementById("mybutton").onclick = function(){
-          location.href = "newAccount.html";
+          location.href = "newAccount.html";//When the new account button is clicked it will redirect to the new account page.
       }
       </script>
     </div>

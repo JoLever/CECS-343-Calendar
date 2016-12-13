@@ -1,14 +1,29 @@
-function todayDate() {
-    var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-}
-function nextItemId() {
-    'use strict';
-	localStorage.nextId = localStorage.nextId ? parseInt(localStorage.nextId, 10) + 1 : 0;
-	return 'item' + localStorage.nextId;
+var weekdaysTable;//creates a table for the weekdays
+var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];//array filled the the week day names.
+function setWeekDays(){
+    var weekdays = weekdaysTable.insertRow(0);
+    var blank = weekdays.insertCell(0);
+    var Sunday = weekdays.insertCell(1);
+    var Monday = weekdays.insertCell(2);
+    var Tuesday = weekdays.insertCell(3);
+    var Wednesday = weekdays.insertCell(4);
+    var Thursday = weekdays.insertCell(5);
+    var Friday = weekdays.insertCell(6);
+    var Saturday = weekdays.insertCell(7);
+    blank.className = 'blank';
+    blank.innerHTML = " ";
+    Sunday.innerHTML = "Sunday";
+    Monday.innerHTML = "Monday";
+    Tuesday.innerHTML = "Tuesday";
+    Wednesday.innerHTML = "Wednesday";
+    Thursday.innerHTML = "Thursday";
+    Friday.innerHTML = "Friday";
+    Saturday.innerHTML = "Saturday";
+	weekdaysTable.className = 'weekdays';
 }
 
-// callback expects a list of objects with the itemId and itemValue properties set
-function lookupItemsForParentId(parentId, callback) {
+//returns array list of objects with the itemId and itemValue
+function searchItemsForPID(parentId, callback) {
     'use strict';
 	if (localStorage[parentId]) {
 		var parentIdsToItemIds = localStorage[parentId].split(',');
@@ -18,13 +33,18 @@ function lookupItemsForParentId(parentId, callback) {
 		{
 			var itemId = parentIdsToItemIds[i];
 			var itemValue = localStorage[itemId];
-			list.push({'itemId': itemId, 'itemValue': itemValue});
+			list.push({'itemId': itemId, 'itemValue': itemValue});//adds itemId and itemValue to the array list.
 		}
 
 		callback(list);
 	}
 }
-
+function nxtItemID() {//gets the id for where the item is stored
+    'use strict';
+	localStorage.nextId = localStorage.nextId ? parseInt(localStorage.nextId, 10) + 1 : 0;
+	return 'item' + localStorage.nextId;
+}
+//Stores the items on the dates in local storage
 function storeValueForItemId(itemId)
 {
 	var item = document.getElementById(itemId);
@@ -50,8 +70,8 @@ function storeValueForItemId(itemId)
 		}
 	}
 }
-
-function removeValueForItemId(itemId)
+//This allows the item to be deleted from local storage
+function removeItemID(itemId)
 {
 	delete localStorage[itemId];
 
@@ -74,29 +94,23 @@ function removeValueForItemId(itemId)
 	}
 }
 
-var todayDate;
-var firstDate;
-var lastDate;
-var calendarTableElement;
 var itemPaddingBottom = (navigator.userAgent.indexOf('Firefox') != -1) ? 2 : 0;
-var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-
 function idForDate(date)
 {
 	return date.getMonth() + '_' + date.getDate() + '_' + date.getFullYear();
 }
 
-function recalculateHeight(itemId)
+function adjustHeight(itemId)
 {
 	var item = document.getElementById(itemId);
-	if(!item) return; // TODO: why is this sometimes null?
-	item.style.height = '0px'; // item.scrollHeight doesn't shrink on its own
+	if(!item) return; 
+	item.style.height = '0px';
 	item.style.height = item.scrollHeight + itemPaddingBottom + 'px';
 }
 
 function keydownHandler()
 {
-	recalculateHeight(this.id);
+	adjustHeight(this.id);
 	if(this.storeTimeout) clearTimeout(this.storeTimeout);
 	this.storeTimeout = setTimeout('storeValueForItemId("' + this.id + '")', 100);
 }
@@ -105,16 +119,16 @@ function checkItem()
 {
 	if(this.value.length == 0)
 	{
-		removeValueForItemId(this.id);
+		removeItemID(this.id);
 		this.parentNode.removeChild(this);
 	}
 }
-
-function generateItem(parentId, itemId)
+//Loads events that are stored in the calendar.
+function loadEvent(parentId, itemId)
 {
 	var item = document.createElement('textarea');
 	var parent = document.getElementById(parentId);
-	if(!parent) return; // offscreen items aren't generated
+	if(!parent) return;
 	parent.appendChild(item);
 	item.id = itemId;
 	item.onkeyup = keydownHandler;
@@ -122,22 +136,29 @@ function generateItem(parentId, itemId)
 	item.spellcheck = false;
 	return item;
 }
-
+/*
+When a date is clicked on it allows the user to either input or delete an event.
+*/
 document.onclick = function(e)
 {
 	var parentId = e.target.id;
 	if(parentId.indexOf('_') == -1) return;
 
-	var item = generateItem(parentId, nextItemId());
-	recalculateHeight(item.id);
+	var item = loadEvent(parentId, nxtItemID());
+	adjustHeight(item.id);
 	storeValueForItemId(item.id);
 	item.focus();
 }
+var todaysDate;
+var firstMonthDay;
+var lastMonthDay;
+var calendarTable;
+var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];//creates array with month names
 
 function generateDay(day, date)
 {
-	var isShaded = (date.getMonth() % 2);
-	var isToday = (date.getDate() == todayDate.getDate() && date.getMonth() == todayDate.getMonth() && date.getFullYear() == todayDate.getFullYear());
+	var isShaded = (date.getMonth() % 2);//Every other month will be shaded a different color to help differentiate the months
+	var isToday = (date.getDate() == todaysDate.getDate() && date.getMonth() == todaysDate.getMonth() && date.getFullYear() == todaysDate.getFullYear());
 
 	if(isShaded) day.className += ' shaded';
 	if(isToday) day.className += ' today';
@@ -145,57 +166,55 @@ function generateDay(day, date)
 	day.id = idForDate(date);
 	day.innerHTML = '<span>' + date.getDate() + '</span>';
 
-	lookupItemsForParentId(day.id, function(items)
+	searchItemsForPID(day.id, function(items)
 	{
 		for(var i in items)
 		{
-			var item = generateItem(day.id, items[i].itemId);
+			var item = loadEvent(day.id, items[i].itemId);
 			item.value = items[i].itemValue;
-			recalculateHeight(item.id);
+			adjustHeight(item.id);
 		}
 	});
 }
-
-function prependWeek() {
-	var week = calendarTableElement.insertRow(0);
+/*
+moves the first day of the month to the beginning of the previous week
+*/
+function firstWeek() {
+	var week = calendarTable.insertRow(0);
 	var monthName = '';
-
-	// move firstDate to the beginning of the previous week assuming it is already at the beginning of a week
 	do
 	{
-		firstDate.setDate(firstDate.getDate() - 1);
-		if(firstDate.getDate() == 1) monthName = months[firstDate.getMonth()] + '<br />' + firstDate.getFullYear();
+		firstMonthDay.setDate(firstMonthDay.getDate() - 1);
+		if(firstMonthDay.getDate() == 1) monthName = months[firstMonthDay.getMonth()] + '<br />' + firstMonthDay.getFullYear();
 
 		var day = week.insertCell(0);
-		generateDay(day, firstDate);
-	} while(firstDate.getDay() != 0);
+		generateDay(day, firstMonthDay);
+	} while(firstMonthDay.getDay() != 0);
 
-	var extra = week.insertCell(0);
-	extra.className = 'extra';
-	extra.innerHTML = monthName;
+	var month = week.insertCell(0);
+	month.className = 'month';
+	month.innerHTML = monthName;
 }
-
-function appendWeek() {
-	var week = calendarTableElement.insertRow(-1);
+/*
+moves the last day of the month to the end of the next week
+*/
+function lastWeek() {
+	var week = calendarTable.insertRow(-1);
 	var monthName = '';
-
-	// move lastDate to the end of the next week assuming it is already at the end of a week
 	do
 	{
-		lastDate.setDate(lastDate.getDate() + 1);
-		if(lastDate.getDate() == 1) monthName = months[lastDate.getMonth()] + '<br />' + lastDate.getFullYear();
+		lastMonthDay.setDate(lastMonthDay.getDate() + 1);
+		if(lastMonthDay.getDate() == 1) monthName = months[lastMonthDay.getMonth()] + '<br />' + lastMonthDay.getFullYear();
 
 		var day = week.insertCell(-1);
-		generateDay(day, lastDate);
-	} while(lastDate.getDay() != 6)
+		generateDay(day, lastMonthDay);
+	} while(lastMonthDay.getDay() != 6)
 
-	var extra = week.insertCell(0);
-	extra.className = 'extra';
-	extra.innerHTML = monthName;
+	var month = week.insertCell(0);
+	month.className = 'month';
+	month.innerHTML = monthName;
 }
-function scrollPositionForElement(element)
-{
-	// find the y position by working up the DOM tree
+function scrollPositionForElement(element) {
 	var clientHeight = element.clientHeight;
 	var y = element.offsetTop;
 	while(element.offsetParent && element.offsetParent != document.body)
@@ -203,135 +222,115 @@ function scrollPositionForElement(element)
 		element = element.offsetParent;
 		y += element.offsetTop;
 	}
-
-	// center the element in the window
 	return y - (window.innerHeight - clientHeight) / 2;
 }
 
-function scrollToToday()
-{
-	window.scrollTo(0, scrollPositionForElement(document.getElementById(idForDate(todayDate))));
+function scrollToToday() {
+	window.scrollTo(0, scrollPositionForElement(document.getElementById(idForDate(todaysDate))));
 }
 
-var startTime;
+var start;
 var startY;
 var goalY;
 
-function curve(x)
-{
+function curve(x) {
 	return (x < 0.5) ? (4*x*x*x) : (1 - 4*(1-x)*(1-x)*(1-x));
 }
 
-function scrollAnimation()
-{
-	var percent = (new Date() - startTime) / 1000;
+function scrollMovement() {
+	var percent = (new Date() - start) / 1000;
 
 	if(percent > 1) window.scrollTo(0, goalY);
 	else
 	{
 		window.scrollTo(0, Math.round(startY + (goalY - startY) * curve(percent)));
-		setTimeout('scrollAnimation()', 10);
+		setTimeout('scrollMovement()', 10);
 	}
 }
 
-function documentScrollTop()
-{
+function documentScrollTop() {
 	var scrollTop = document.body.scrollTop;
 	if(document.documentElement) scrollTop = Math.max(scrollTop, document.documentElement.scrollTop);
 	return scrollTop;
 }
 
-function documentScrollHeight()
-{
+function documentScrollHeight() {
 	var scrollHeight = document.body.scrollHeight;
 	if(document.documentElement) scrollHeight = Math.max(scrollHeight, document.documentElement.scrollHeight);
 	return scrollHeight;
 }
 
-function smoothScrollToToday()
-{
-	goalY = scrollPositionForElement(document.getElementById(idForDate(todayDate)));
+function scrollToCurrentDate() {
+	goalY = scrollPositionForElement(document.getElementById(idForDate(todaysDate)));
 	startY = documentScrollTop();
-	startTime = new Date();
-	if(goalY != startY) setTimeout('scrollAnimation()', 10);
+	start = new Date();
+	if(goalY != startY) setTimeout('scrollMovement()', 10);
 }
-
+//updates todays date 
 function poll()
 {
-	// add more weeks so you can always keep scrolling
 	if(documentScrollTop() < 200)
 	{
-		var oldScrollHeight = documentScrollHeight();
-		for(var i = 0; i < 8; i++) prependWeek();
-		window.scrollBy(0, documentScrollHeight() - oldScrollHeight);
+		var oldHeight = documentScrollHeight();
+		for(var i = 0; i < 8; i++) firstWeek();
+		window.scrollBy(0, documentScrollHeight() - oldHeight);
 	}
 	else if(documentScrollTop() > documentScrollHeight() - window.innerHeight - 200)
 	{
-		for(var i = 0; i < 8; i++) appendWeek();
+		for(var i = 0; i < 8; i++) lastWeek();
 	}
-
-	// update today when the date changes
 	var newTodayDate = new Date;
-	if(newTodayDate.getDate() != todayDate.getDate() || newTodayDate.getMonth() != todayDate.getMonth() || newTodayDate.getFullYear() != todayDate.getFullYear())
+	if(newTodayDate.getDate() != todaysDate.getDate() || newTodayDate.getMonth() != todaysDate.getMonth() || newTodayDate.getFullYear() != todaysDate.getFullYear())
 	{
-		// TODO: resize all items in yesterday and today because of the border change
 
-		var todayElement = document.getElementById(idForDate(todayDate));
+		var todayElement = document.getElementById(idForDate(todaysDate));
 		if(todayElement) todayElement.className = todayElement.className.replace('today', '');
 
-		todayDate = newTodayDate;
+		todaysDate = newTodayDate;
 
-		todayElement = document.getElementById(idForDate(todayDate));
+		todayElement = document.getElementById(idForDate(todaysDate));
 		if(todayElement) todayElement.className += ' today';
 	}
 }
-
-function loadCalendarAroundDate(seedDate)
+//loads the calendar around todays date
+function loadAroundCurrentDate(currentDate)
 {
-	calendarTableElement.innerHTML = '';
-	firstDate = new Date(seedDate);
+	calendarTable.innerHTML = '';
+	firstMonthDay = new Date(currentDate);
 
-	// move firstDate to the beginning of the week
-	while(firstDate.getDay() != 0) firstDate.setDate(firstDate.getDate() - 1);
+	// moves firstMonthDay to the beginning of the week
+	while(firstMonthDay.getDay() != 0) firstMonthDay.setDate(firstMonthDay.getDate() - 1);
 
-	// set lastDate to the day before firstDate
-	lastDate = new Date(firstDate);
-	lastDate.setDate(firstDate.getDate() - 1);
-
-	// generate the current week (which is like appending to the current zero-length week)
-	appendWeek();
-
-	// fill up the entire window with weeks
+	// sets lastMonthDay to the day before firstMonthDay
+	lastMonthDay = new Date(firstMonthDay);
+	lastMonthDay.setDate(firstMonthDay.getDate() - 1);
+	lastWeek();//generates the current week
 	while(documentScrollHeight() <= window.innerHeight)
 	{
-		prependWeek();
-		appendWeek();
+		firstWeek();
+		lastWeek();
 	}
 
-	// need to let safari recalculate heights before we start scrolling
 	setTimeout('scrollToToday()', 50);
 }
-
-window.onload = function()
+window.onload = function()//when the window opens it immediately loads these functions.
 {
-	calendarTableElement = document.getElementById('calendar');
-	todayDate = new Date;
-
-	loadCalendarAroundDate(todayDate);
+    weekdaysTable = document.getElementById('weeks');
+    setWeekDays();
+	calendarTable = document.getElementById('calendar');
+	todaysDate = new Date;
+	loadAroundCurrentDate(todaysDate);
 	setInterval('poll()', 100);
 }
-function logOut(){ 
-    document.getElementById("mybutton").onclick = function(){
-    location.href = "calendar.html";
-    }
-}
-function showHelp() { 
+function openHelpMenu() { //open and closes the help menu
     document.getElementById('help').style.display = 'block';
 }
-function hideHelp() { 
+function closeHelpMenu() { 
     document.getElementById('help').style.display = 'none';
 }
-
-document.write('<div id = "h1">CSULB Student Calendar<div id = "days"><b class="mybutton"href="javascript:logOut()">logout</b> \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Sunday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Monday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Tuesday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0 Wednesday \u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Thursday \u00A0 \u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Friday \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 | \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Saturday<div id="header"><a class="button" href="javascript:smoothScrollToToday()">Current Date</a><a class="button" href="javascript:showHelp()">Help</a>&nbsp;</a></div></div></div>');
+var url = "calendar.html";
+var url1 = "CalendarPage.html";
+document.write('<div id = "h1">CSULB Student Calendar<div id = "days"><button class="mybutton" onclick="window.location.href = url">logout</button><div id="header"><a class="button" href="javascript:scrollToCurrentDate()">Current Date</a><a class="button" href="javascript:openHelpMenu()">Help</a>&nbsp;</a></div></div></table></div>');
+document.write('<table id="weeks"></table>');
 document.write('<table id="calendar"></table>');
-document.write('<div id="help"><div><ul><li>Click on a date to add an event</li><li>Click on a date to delete an event</li><li>Use the scroll wheel/trackpad to navigate</li></ul><a class="button" href="javascript:hideHelp()">Close</a></div></div>');
+document.write('<div id="help"><div><ul><li>Click on a date to add an event</li><li>Click on a date to delete an event</li><li>Use the scroll wheel/trackpad to navigate</li></ul><a class="button" href="javascript:closeHelpMenu()">Close</a></div></div>');
